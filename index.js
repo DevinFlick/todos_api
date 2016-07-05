@@ -19,7 +19,10 @@ server.use(bodyParser.urlencoded({extended: true}));
 // });
 
 server.get('/todos/:id', function(request, response){
-  response.send('GET todos :id');
+  var todo = db.get('todos')
+                .find({id: request.params.id})
+                .value();
+  response.send(todo);
 });
 
 server.get('/todos/', function(request, response){
@@ -52,7 +55,10 @@ server.put('/todos/:id', function(request, response){
 });
 
 server.delete('/todos/:id', function(request, response){
-  response.send('DELETE todos :id');
+  var todo = db.get('todos')
+                remove({id:request.params.id})
+                .value();
+  response. send(todo);
 });
 
 server.listen(port, function(){
