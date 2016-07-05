@@ -14,12 +14,18 @@ db.defaults({todos: []})
 server.use(bodyParser.json());
 server.use(bodyParser.urlencoded({extended: true}));
 
-server.get('/todos', function(request, response){
-  response.send('GET todos');
-});
+// server.get('/todos', function(request, response){
+//   response.send('GET todos');
+// });
 
 server.get('/todos/:id', function(request, response){
   response.send('GET todos :id');
+});
+
+server.get('/todos/', function(request, response){
+  var todos = db.get('todos')
+  .value();
+  response.send(todos);
 });
 
 server.post('/todos/', function(request, response){
