@@ -4,6 +4,9 @@ var lowdb = require('lowdb');
 var uuid = require('uuid');
 var server = express();
 
+var Todo = require('./models/todo.js');
+var testTodo = new Todo('somestuff');
+console.log(testTodo);
 var port = process.env.PORT || 8080;
 var db = lowdb('db.json');
 
@@ -34,15 +37,7 @@ server.get('/todos/', function(request, response){
 server.post('/todos/', function(request, response){
   // use line below to check in postman
   //response.send('POST todos');
-  var todo = {
-  //we need to have a randomly generated id so discard the code line below
-  //  id: '5',
-  id: uuid.v4(),
-    //description: 'buy groceries', changing to have userinput
-    description: request.body.description,
-    isComplete: false
-  };
-
+  var todo = new Todo(request.body.description);
   var result = db.get('todos')
                   .push(todo)
                   .last()
@@ -51,13 +46,11 @@ server.post('/todos/', function(request, response){
 });
 
 server.put('/todos/:id', function(request, response){
-  var updatedTodoInto = {
-    description: request.body.description,
-    isComplete: request.body.isComplete
-  };
+  var todo = new Todo(request.body.description);
+  todo.updateComplete(request.body.isComplete);
   var updatedTodo = db.get ('todos')
                       .find({id: request.params.id})
-                      .assign(updatedTodoInfo)
+                      .assign(todo)
                       .value();
   response.send(updatedTodo);
 });
